@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCAD Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="banner">
+    <p class="eyebrow">Elizabethtown College</p>
+    <h1>SCAD Registration Form</h1>
+    <p class="subtitle">Scholarship and Creative Arts Day</p>
+  </header>
+
+  <form id="scad-form">
+
+    <p class="note">
+      Use one form per presentation or poster. Oral presentations get a 20-minute slot:
+    </p>
+
+    <h2>Student</h2>
+    <label>First name <input type="text" name="first_name" required></label><br>
+    <label>Last name <input type="text" name="last_name" required></label><br>
+    <label>Email <input type="email" name="email" required></label><br>
+
+    <h2>Presentation</h2>
+    <p>Type:</p>
+    <label><input type="radio" name="submission_type" value="oral" required> Oral presentation</label>
+    <label><input type="radio" name="submission_type" value="poster"> Poster</label><br>
+    <label>Title <input type="text" name="title" required></label><br>
+    <label>Abstract (250 words max)<br>
+      <textarea name="abstract" rows="6" cols="60" required></textarea>
+    </label><br>
+    <label>Department <input type="text" name="department" required></label><br>
+    <label>Course or capstone program <input type="text" name="course"></label><br>
+
+    <h2>Group</h2>
+    <p>Is this a group presentation?</p>
+    <label><input type="radio" name="is_group" value="yes" required> Yes</label>
+    <label><input type="radio" name="is_group" value="no"> No</label><br>
+    <label>Other group members (one per line: name, email)<br>
+      <textarea name="group_members" rows="4" cols="60"></textarea>
+    </label><br>
+
+    <h2>Mentors</h2>
+    <label>Primary mentor <input type="text" name="mentor1_name" required></label><br>
+    <label>Primary mentor email <input type="email" name="mentor1_email" required></label><br>
+    <label>Secondary mentor <input type="text" name="mentor2_name"></label><br>
+    <label>Secondary mentor email <input type="email" name="mentor2_email"></label><br>
+
+    <h2>Panel (oral presentations only)</h2>
+    <p>Is this presentation part of a panel?</p>
+    <label><input type="radio" name="is_panel" value="yes"> Yes</label>
+    <label><input type="radio" name="is_panel" value="no"> No</label><br>
+    <label>Panel title <input type="text" name="panel_title"></label><br>
+    <label>Panel moderator <input type="text" name="panel_moderator"></label><br>
+    <label>Order in panel <input type="number" name="panel_position" min="1"> of <input type="number" name="panel_size" min="1"></label><br>
+
+    <h2>Other</h2>
+    <label>Additional comments<br>
+      <textarea name="comments" rows="3" cols="60"></textarea>
+    </label><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script src="script.js"></script>
+</body>
+</html>

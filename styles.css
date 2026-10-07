@@ -1,0 +1,216 @@
+/* Colors and fonts from our Google Stitch style guide */
+:root {
+  --primary: #0B2545;     /* dark navy: banner, headings, submit button */
+  --secondary: #C59B27;   /* gold: accents, section numbers */
+  --tertiary: #1D4ED8;    /* bright blue: focus, selected options, info note */
+  --neutral: #0F172A;     /* near-black: body text */
+
+  --page-bg: #D6DCF5;     /* lavender page background */
+  --card-bg: #EAECFC;     /* light lavender card */
+  --input-bg: #E1E4FA;    /* input fill */
+  --border: #C3C9EA;
+  --note-bg: #DCE4FD;     /* light blue for the info note */
+
+  --font-headline: "Newsreader", Georgia, serif;
+  --font-body: "Source Sans 3", Arial, sans-serif;
+
+  --radius-card: 20px;
+  --radius-control: 6px;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--page-bg);
+  color: var(--neutral);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* ---------- Navy banner at the top ---------- */
+.banner {
+  background-color: var(--primary);
+  color: #fff;
+  border-radius: var(--radius-card);
+  padding: 28px 28px 24px;
+  margin-bottom: 20px;
+  border-bottom: 6px solid var(--secondary);
+}
+
+.banner h1 {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: 2.3rem;
+  color: #fff;
+  margin: 4px 0;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+.subtitle {
+  margin: 0;
+  color: #C9D3EA;
+}
+
+/* ---------- Form card ---------- */
+form {
+  background-color: var(--card-bg);
+  border-radius: var(--radius-card);
+  padding: 24px 28px 28px;
+  counter-reset: section;
+}
+
+/* Spacing is handled with CSS, so hide the <br> tags */
+form br {
+  display: none;
+}
+
+/* Blue info note at the top of the form */
+.note {
+  background-color: var(--note-bg);
+  border-left: 4px solid var(--tertiary);
+  border-radius: var(--radius-control);
+  padding: 12px 16px;
+  margin: 0 0 8px;
+  color: var(--primary);
+}
+
+/* Section headings: navy serif text with a gold number in front */
+h2 {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: 1.4rem;
+  color: var(--primary);
+  margin: 32px 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--secondary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  counter-increment: section;
+}
+
+h2::before {
+  content: counter(section);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--secondary);
+  color: var(--primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+p {
+  margin: 16px 0 6px;
+}
+
+/* ---------- Fields ---------- */
+label {
+  display: block;
+  margin-top: 16px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--neutral);
+  background-color: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+
+input[type="number"] {
+  width: 70px;
+  padding: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+
+input:hover,
+textarea:hover {
+  border-color: var(--primary);
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  background-color: #fff;
+  border-color: var(--tertiary);
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.2);
+}
+
+/* Radio options look like small pills; the chosen one turns blue */
+label:has(input[type="radio"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 10px 0 0;
+  padding: 6px 14px;
+  font-weight: 400;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+label:has(input[type="radio"]:checked) {
+  background-color: var(--tertiary);
+  border-color: var(--tertiary);
+  color: #fff;
+}
+
+input[type="radio"] {
+  accent-color: var(--primary);
+  margin: 0;
+}
+
+input[type="radio"]:checked {
+  accent-color: var(--secondary);
+}
+
+/* ---------- Submit button ---------- */
+button {
+  margin-top: 28px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 12px 36px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--tertiary);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+}
