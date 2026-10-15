@@ -1,0 +1,275 @@
+/* Colors and fonts from the Elizabethtown College Brand Style Guide (Sept. 2025) */
+:root {
+  /* Brand colors */
+  --etown-blue: #004B98;   /* PMS 2945, primary: buttons, focus */
+  --etown-navy: #0A2240;   /* PMS 289: banner, headings, labels */
+  --sky-blue: #3DB5E6;     /* PMS 298: accents, section numbers */
+  --cool-gray: #C8C8C8;    /* PMS Cool Gray 3: borders */
+  --red: #E1261C;          /* PMS 485: errors */
+
+  /* Light tints for backgrounds */
+  --page-bg: #F2F4F7;      /* very light gray page */
+  --card-bg: #FFFFFF;      /* white form card */
+  --input-bg: #F7F8FA;     /* input fill */
+  --note-bg: #E6F4FB;      /* light sky blue info note */
+  --text: #1A1A1A;
+
+  /* Brand fonts: Clarendon for headlines, Verdana as the default.
+     Clarendon isn't on every computer, so it falls back to Georgia. */
+  --font-headline: "Clarendon", "Clarendon BT", Georgia, serif;
+  --font-body: Verdana, Geneva, sans-serif;
+
+  --radius-card: 12px;
+  --radius-control: 6px;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  background-color: var(--page-bg);
+  color: var(--text);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+/* Navy banner at the top */
+.banner {
+  background-color: var(--etown-navy);
+  color: #fff;
+  border-radius: var(--radius-card);
+  padding: 28px 28px 24px;
+  margin-bottom: 20px;
+  border-bottom: 6px solid var(--etown-blue);
+}
+
+.banner h1 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 2.1rem;
+  color: #fff;
+  margin: 4px 0;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sky-blue);
+}
+
+.subtitle {
+  margin: 0;
+  color: #D5DCE6;
+}
+
+/* Form card */
+form {
+  background-color: var(--card-bg);
+  border: 1px solid var(--cool-gray);
+  border-radius: var(--radius-card);
+  padding: 24px 28px 28px;
+  counter-reset: section;
+}
+
+/* Spacing is handled with CSS, so hide the <br> tags */
+form br {
+  display: none;
+}
+
+/* Light blue info note at the top of the form */
+.note {
+  background-color: var(--note-bg);
+  border-left: 4px solid var(--sky-blue);
+  border-radius: var(--radius-control);
+  padding: 12px 16px;
+  margin: 0 0 8px;
+  color: var(--etown-navy);
+}
+
+/* Section headings: navy text with a numbered circle in front */
+h2 {
+  font-family: var(--font-headline);
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--etown-navy);
+  margin: 32px 0 4px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--etown-blue);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  counter-increment: section;
+}
+
+h2::before {
+  content: counter(section);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--sky-blue);
+  color: var(--etown-navy);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+p {
+  margin: 16px 0 6px;
+}
+
+/* Smaller headings inside a section */
+.subheading {
+  font-weight: 700;
+  color: var(--etown-navy);
+  margin-top: 24px;
+}
+
+/* Fields */
+label {
+  display: block;
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--etown-navy);
+}
+
+input[type="text"],
+input[type="email"],
+textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
+  padding: 10px 12px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text);
+  background-color: var(--input-bg);
+  border: 1px solid var(--cool-gray);
+  border-radius: var(--radius-control);
+}
+
+input[type="number"] {
+  width: 70px;
+  padding: 8px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  background-color: var(--input-bg);
+  border: 1px solid var(--cool-gray);
+  border-radius: var(--radius-control);
+}
+
+input:hover,
+textarea:hover {
+  border-color: var(--etown-navy);
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  background-color: #fff;
+  border-color: var(--etown-blue);
+  box-shadow: 0 0 0 3px rgba(0, 75, 152, 0.2);
+}
+
+/* Radio options look like small pills; the chosen one turns Etown blue */
+label:has(input[type="radio"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 10px 0 0;
+  padding: 6px 14px;
+  font-weight: 400;
+  background-color: var(--input-bg);
+  border: 1px solid var(--cool-gray);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+label:has(input[type="radio"]:checked) {
+  background-color: var(--etown-blue);
+  border-color: var(--etown-blue);
+  color: #fff;
+}
+
+input[type="radio"] {
+  accent-color: var(--etown-navy);
+  margin: 0;
+}
+
+input[type="radio"]:checked {
+  accent-color: var(--sky-blue);
+}
+
+/* Group member rows: first name, last name, email, remove button */
+.member-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr auto;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.member-row input {
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  .member-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Submit button */
+button {
+  margin-top: 28px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  background-color: var(--etown-blue);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-control);
+  padding: 12px 36px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: var(--etown-navy);
+}
+
+button:focus-visible {
+  outline: 3px solid var(--sky-blue);
+  outline-offset: 2px;
+}
+
+/* Light outlined button for "Add a group member" */
+.secondary-button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background-color: var(--input-bg);
+  color: var(--etown-blue);
+  border: 1px solid var(--etown-blue);
+}
+
+.secondary-button:hover {
+  background-color: var(--note-bg);
+}
+
+/* Small red X that removes a group member row */
+.remove-member {
+  margin-top: 0;
+  padding: 0 14px;
+  background-color: #fff;
+  color: var(--red);
+  border: 1px solid var(--cool-gray);
+}
+
+.remove-member:hover {
+  background-color: #FDECEA;
+}
