@@ -4,9 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SCAD Registration</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,6 +17,7 @@
 
     <p class="note">
       Use one form per presentation or poster. Oral presentations get a 20-minute slot:
+      15 minutes to present and 5 minutes for questions.
     </p>
 
     <h2>Student</h2>
@@ -42,23 +40,37 @@
     <p>Is this a group presentation?</p>
     <label><input type="radio" name="is_group" value="yes" required> Yes</label>
     <label><input type="radio" name="is_group" value="no"> No</label><br>
-    <label>Other group members (one per line: name, email)<br>
-      <textarea name="group_members" rows="4" cols="60"></textarea>
-    </label><br>
+    <p class="subheading">Other group members</p>
+    <div id="group-members"></div>
+    <button type="button" id="add-member" class="secondary-button">+ Add a group member</button>
 
     <h2>Mentors</h2>
-    <label>Primary mentor <input type="text" name="mentor1_name" required></label><br>
-    <label>Primary mentor email <input type="email" name="mentor1_email" required></label><br>
-    <label>Secondary mentor <input type="text" name="mentor2_name"></label><br>
-    <label>Secondary mentor email <input type="email" name="mentor2_email"></label><br>
+    <p class="subheading">Primary mentor</p>
+    <label>First name <input type="text" name="mentor1_first_name" required></label><br>
+    <label>Last name <input type="text" name="mentor1_last_name" required></label><br>
+    <label>Email <input type="email" name="mentor1_email" required></label><br>
+    <p>Would your primary mentor be willing to moderate a session?</p>
+    <label><input type="radio" name="mentor1_willing_to_moderate" value="yes"> Yes</label>
+    <label><input type="radio" name="mentor1_willing_to_moderate" value="no"> No</label><br>
+
+    <p class="subheading">Secondary mentor (optional)</p>
+    <label>First name <input type="text" name="mentor2_first_name"></label><br>
+    <label>Last name <input type="text" name="mentor2_last_name"></label><br>
+    <label>Email <input type="email" name="mentor2_email"></label><br>
+    <p>Would your secondary mentor be willing to moderate a session?</p>
+    <label><input type="radio" name="mentor2_willing_to_moderate" value="yes"> Yes</label>
+    <label><input type="radio" name="mentor2_willing_to_moderate" value="no"> No</label><br>
 
     <h2>Panel (oral presentations only)</h2>
     <p>Is this presentation part of a panel?</p>
     <label><input type="radio" name="is_panel" value="yes"> Yes</label>
     <label><input type="radio" name="is_panel" value="no"> No</label><br>
     <label>Panel title <input type="text" name="panel_title"></label><br>
-    <label>Panel moderator <input type="text" name="panel_moderator"></label><br>
-    <label>Order in panel <input type="number" name="panel_position" min="1"> of <input type="number" name="panel_size" min="1"></label><br>
+    <p class="subheading">Panel moderator (leave blank if there isn't one yet)</p>
+    <label>First name <input type="text" name="moderator_first_name"></label><br>
+    <label>Last name <input type="text" name="moderator_last_name"></label><br>
+    <label>Email <input type="email" name="moderator_email"></label><br>
+    <label>Your presentation's order in the panel (1 = first) <input type="number" name="panel_order" min="1"></label><br>
 
     <h2>Other</h2>
     <label>Additional comments<br>
