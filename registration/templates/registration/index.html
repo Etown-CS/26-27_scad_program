@@ -1,10 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SCAD Registration</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="{% static 'registration/styles.css' %}">
 </head>
 <body>
   <header class="banner">
@@ -14,6 +15,7 @@
   </header>
 
   <form id="scad-form">
+    {% csrf_token %}
 
     <p class="note">
       Use one form per presentation or poster. Oral presentations get a 20-minute slot:
@@ -43,7 +45,7 @@
     <p class="subheading">Other group members</p>
     <div id="group-members"></div>
     <button type="button" id="add-member" class="secondary-button">+ Add a group member</button>
-
+    
     <h2>Mentors</h2>
     <p class="subheading">Primary mentor</p>
     <label>First name <input type="text" name="mentor1_first_name" required></label><br>
@@ -71,7 +73,6 @@
     <label>Last name <input type="text" name="moderator_last_name"></label><br>
     <label>Email <input type="email" name="moderator_email"></label><br>
     <label>Your presentation's order in the panel (1 = first) <input type="number" name="panel_order" min="1"></label><br>
-
     <h2>Other</h2>
     <label>Additional comments<br>
       <textarea name="comments" rows="3" cols="60"></textarea>
@@ -80,6 +81,6 @@
     <button type="submit">Submit</button>
   </form>
 
-  <script src="script.js"></script>
+  <script src="{% static 'registration/script.js' %}"></script>
 </body>
 </html>
