@@ -54,3 +54,6 @@ def create_submission(request):
 
     print(f"Saved raw submission #{raw.raw_submission_id} for {data['email']}")
     return JsonResponse({"message": "Received", "id": raw.raw_submission_id}, status=201)
+
+def home(request):
+    return render(request, "registration/home.html")
