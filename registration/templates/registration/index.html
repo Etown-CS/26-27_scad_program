@@ -5,9 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SCAD Registration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'registration/navbar.css' %}">
   <link rel="stylesheet" href="{% static 'registration/styles.css' %}">
 </head>
 <body>
+  {% include "registration/partials/navbar.html" with active="form" %}
+
+  <main class="page">
+
   <header class="banner">
     <p class="eyebrow">Elizabethtown College</p>
     <h1>SCAD Registration Form</h1>
@@ -45,7 +53,7 @@
     <p class="subheading">Other group members</p>
     <div id="group-members"></div>
     <button type="button" id="add-member" class="secondary-button">+ Add a group member</button>
-    
+
     <h2>Mentors</h2>
     <p class="subheading">Primary mentor</p>
     <label>First name <input type="text" name="mentor1_first_name" required></label><br>
@@ -73,6 +81,7 @@
     <label>Last name <input type="text" name="moderator_last_name"></label><br>
     <label>Email <input type="email" name="moderator_email"></label><br>
     <label>Your presentation's order in the panel (1 = first) <input type="number" name="panel_order" min="1"></label><br>
+
     <h2>Other</h2>
     <label>Additional comments<br>
       <textarea name="comments" rows="3" cols="60"></textarea>
@@ -80,6 +89,7 @@
 
     <button type="submit">Submit</button>
   </form>
+  </main>
 
   <script src="{% static 'registration/script.js' %}"></script>
 </body>

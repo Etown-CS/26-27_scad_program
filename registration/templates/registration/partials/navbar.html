@@ -1,0 +1,22 @@
+{% comment %}
+  Shared site header. Matches the homepage nav bar.
+  Pages include this file and pass "active" as home, form or agenda,
+  which underlines that link. See the top of index.html for an example.
+{% endcomment %}
+<header class="site-header">
+  <div class="site-header__inner">
+    <a href="{% url 'home' %}" class="site-brand">
+      <span class="site-brand__logo">E</span>
+      <span class="site-brand__text">
+        <span class="site-brand__name">Elizabethtown College</span>
+        <span class="site-brand__tagline">Scholarship &amp; Creative Arts Day</span>
+      </span>
+    </a>
+
+    <nav class="site-nav">
+      <a href="{% url 'home' %}" class="site-nav__link{% if active == 'home' %} is-active{% endif %}">Home</a>
+      <a href="{% url 'form' %}" class="site-nav__link{% if active == 'form' %} is-active{% endif %}">Submit Application</a>
+      <a href="#" class="site-nav__link{% if active == 'agenda' %} is-active{% endif %}">Public Agenda</a>
+    </nav>
+  </div>
+</header>
