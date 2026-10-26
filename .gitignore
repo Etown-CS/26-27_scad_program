@@ -134,3 +134,6 @@ venv/
 __pycache__/
 *.pyc
 db.sqlite3
+# Python virtual environments
+.venv/
+.venv313/
