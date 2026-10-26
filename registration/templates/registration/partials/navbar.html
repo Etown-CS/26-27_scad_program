@@ -17,6 +17,7 @@
       <a href="{% url 'home' %}" class="site-nav__link{% if active == 'home' %} is-active{% endif %}">Home</a>
       <a href="{% url 'form' %}" class="site-nav__link{% if active == 'form' %} is-active{% endif %}">Submit Application</a>
       <a href="#" class="site-nav__link{% if active == 'agenda' %} is-active{% endif %}">Public Agenda</a>
+      <a href="{% url 'admin:index' %}" class="site-nav__link">Admin Login</a>
     </nav>
   </div>
 </header>
