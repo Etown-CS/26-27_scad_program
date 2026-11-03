@@ -6,12 +6,18 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from .models import Event, RawSubmission
+from .processing import mark_needs_review, process_raw_submission
 
 REQUIRED_FIELDS = [
     "first_name", "last_name", "email", "submission_type",
     "title", "abstract", "department",
     "mentor1_first_name", "mentor1_last_name", "mentor1_email",
 ]
+
+
+def home(request):
+    """Shows the SCAD homepage."""
+    return render(request, "registration/home.html")
 
 
 def form_page(request):
@@ -39,7 +45,7 @@ def create_submission(request):
     if timezone.now() > event.registration_deadline:
         return JsonResponse({"error": "Registration is closed. Please contact the SCAD coordinator."}, status=403)
 
-    # Save the whole form as JSON in raw_submission
+    # 1. Save the whole form as JSON in raw_submission (so nothing is ever lost)
     try:
         raw = RawSubmission.objects.create(
             event=event,
@@ -53,7 +59,14 @@ def create_submission(request):
         return JsonResponse({"error": "Could not save your registration. Please try again later."}, status=500)
 
     print(f"Saved raw submission #{raw.raw_submission_id} for {data['email']}")
-    return JsonResponse({"message": "Received", "id": raw.raw_submission_id}, status=201)
 
-def home(request):
-    return render(request, "registration/home.html")
+    # 2. Split it into person, panel, submission, submission_presenter and submission_mentor.
+    #    If this fails, the raw submission is still saved and marked "needs_review".
+    try:
+        submission = process_raw_submission(raw)
+        print(f"Processed into submission #{submission.submission_id}")
+    except Exception as error:
+        print("Could not process submission:", error)
+        mark_needs_review(raw, error)
+
+    return JsonResponse({"message": "Received", "id": raw.raw_submission_id}, status=201)
