@@ -57,6 +57,7 @@ form.addEventListener('submit', async function (event) {
 
     if (response.ok) {
       showMessage('Thank you! Your registration was received.', 'success');
+      addPreviousSubmission(data, result.id);
       form.reset();
       membersBox.innerHTML = '';
     } else {
@@ -80,3 +81,77 @@ function showMessage(text, type) {
   box.className = 'message ' + type;
   box.textContent = text;
 }
+
+// Previous submissions: a short summary of each submission is saved in this
+// browser (localStorage), so it only appears on the device it was sent from.
+const STORAGE_KEY = 'scadPreviousSubmissions';
+const previousSection = document.getElementById('previous-submissions');
+const previousList = document.getElementById('previous-list');
+
+function loadPreviousSubmissions() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch (error) {
+    return []; // storage blocked (e.g. private browsing): just show nothing
+  }
+}
+
+function savePreviousSubmissions(list) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+  } catch (error) {
+    // storage blocked: the form still works, the list just isn't saved
+  }
+}
+
+function addPreviousSubmission(data, id) {
+  const presenters = [data.first_name + ' ' + data.last_name].concat(
+    data.group_members.map(function (m) { return m.first_name + ' ' + m.last_name; })
+  );
+  const list = loadPreviousSubmissions();
+  list.unshift({
+    id: id,
+    title: data.title,
+    type: data.submission_type,
+    presenters: presenters,
+    submittedAt: new Date().toISOString(),
+  });
+  savePreviousSubmissions(list.slice(0, 20)); // keep the 20 most recent
+  renderPreviousSubmissions();
+}
+
+function renderPreviousSubmissions() {
+  const list = loadPreviousSubmissions();
+  previousList.innerHTML = '';
+  previousSection.hidden = list.length === 0;
+
+  list.forEach(function (item) {
+    const li = document.createElement('li');
+
+    const title = document.createElement('div');
+    title.className = 'previous-title';
+    title.textContent = item.title;
+
+    const meta = document.createElement('div');
+    meta.className = 'previous-meta';
+    const type = item.type === 'poster' ? 'Poster' : 'Oral presentation';
+    const when = new Date(item.submittedAt).toLocaleString([], {
+      month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit',
+    });
+    meta.textContent = type + ' · Submitted ' + when;
+
+    const people = document.createElement('div');
+    people.className = 'previous-meta';
+    people.textContent = 'Presenters: ' + item.presenters.join(', ');
+
+    li.append(title, meta, people);
+    previousList.appendChild(li);
+  });
+}
+
+document.getElementById('clear-previous').addEventListener('click', function () {
+  savePreviousSubmissions([]);
+  renderPreviousSubmissions();
+});
+
+renderPreviousSubmissions(); // show the list when the page loads
