@@ -1,7 +1,8 @@
 import json
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.db.models import Count
+from django.utils import timezone
 from django.utils.html import format_html, format_html_join
 
 from .models import (
@@ -23,11 +24,12 @@ def people_list(links):
     return format_html_join(format_html("<br>"), "{}", names)
 
 
-# Events
+# Events (with the "Generate draft schedule" button)
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     list_display = ("event_name", "event_date", "registration_deadline", "submission_count")
     ordering = ("-event_date",)
+    actions = ["generate_schedule"]
 
     def get_queryset(self, request):
         return super().get_queryset(request).annotate(_submissions=Count("submission"))
@@ -35,6 +37,22 @@ class EventAdmin(admin.ModelAdmin):
     @admin.display(description="Submissions", ordering="_submissions")
     def submission_count(self, obj):
         return obj._submissions
+
+    @admin.action(description="Generate draft schedule for the selected event")
+    def generate_schedule(self, request, queryset):
+        if queryset.count() != 1:
+            self.message_user(request, "Select exactly one event to schedule.", messages.WARNING)
+            return
+        from .scheduling import generate_draft_schedule
+
+        result = generate_draft_schedule(queryset.first())
+        if not result.ok:
+            level = messages.ERROR
+        elif result.conflicts:
+            level = messages.WARNING
+        else:
+            level = messages.SUCCESS
+        self.message_user(request, result.message, level)
 
 
 # Raw form submissions
@@ -120,7 +138,6 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 
 # People
-
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     list_display = ("last_name", "first_name", "email")
@@ -157,17 +174,50 @@ class SessionAdmin(admin.ModelAdmin):
     autocomplete_fields = ("moderator",)
 
 
-# Schedule
+# Schedule (with Publish / back to draft buttons)
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ("event", "status", "generated_at", "published_at")
+    list_display = ("event", "status", "assignment_count", "generated_at", "published_at")
     list_filter = ("status",)
+    actions = ["publish", "back_to_draft"]
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).annotate(_assignments=Count("assignments"))
+
+    @admin.display(description="Presentations", ordering="_assignments")
+    def assignment_count(self, obj):
+        return obj._assignments
+
+    @admin.action(description="Publish selected schedule")
+    def publish(self, request, queryset):
+        updated = queryset.update(status="published", published_at=timezone.now())
+        self.message_user(request, f"{updated} schedule(s) published.", messages.SUCCESS)
+
+    @admin.action(description="Set selected schedule back to draft")
+    def back_to_draft(self, request, queryset):
+        updated = queryset.update(status="draft", published_at=None)
+        self.message_user(request, f"{updated} schedule(s) set back to draft.")
 
 
 @admin.register(ScheduleAssignment)
 class ScheduleAssignmentAdmin(admin.ModelAdmin):
-    list_display = ("submission", "session", "start_time", "end_time", "poster_number", "is_locked")
+    list_display = ("start_time", "room", "submission", "panel", "session", "is_locked")
+    list_display_links = ("submission",)
     list_editable = ("is_locked",)
-    list_filter = ("schedule", "session", "is_locked")
+    list_filter = ("schedule", "session__session_name", "session__location", "is_locked")
     search_fields = ("submission__title",)
     autocomplete_fields = ("submission", "session")
+    list_per_page = 100
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            "submission__panel", "session__location"
+        )
+
+    @admin.display(description="Room", ordering="session__location")
+    def room(self, obj):
+        return obj.session.location
+
+    @admin.display(description="Panel")
+    def panel(self, obj):
+        return obj.submission.panel or "—"
