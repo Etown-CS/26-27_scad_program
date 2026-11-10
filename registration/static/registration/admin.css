@@ -1,0 +1,90 @@
+/* SCAD admin colors: Elizabethtown College brand colors
+   Etown Blue #004B98, Etown Navy #0A2240, Sky Blue #3DB5E6 */
+
+/* Colors used in both light and dark mode */
+html[data-theme="light"],
+html[data-theme="dark"],
+:root {
+  --primary: #004B98;              /* section and table headers */
+  --primary-fg: #fff;
+  --secondary: #0A2240;
+  --accent: #3DB5E6;
+
+  --header-bg: #0A2240;            /* top bar */
+  --header-color: #E2E8F0;
+  --header-branding-color: #fff;   /* "SCAD Administration" title */
+  --header-link-color: #fff;
+
+  --button-bg: #004B98;
+  --button-hover-bg: #0A2240;
+  --default-button-bg: #0A2240;    /* main "Save" button */
+  --default-button-hover-bg: #004B98;
+  --object-tools-bg: #004B98;      /* "Add" buttons at the top right */
+  --object-tools-hover-bg: #0A2240;
+}
+
+/* Colors only for light mode (dark mode keeps Django's readable defaults) */
+html[data-theme="light"] {
+  --link-fg: #004B98;
+  --link-hover-color: #0A2240;
+  --link-selected-fg: #004B98;
+  --breadcrumbs-bg: #E6F4FB;
+  --breadcrumbs-fg: #0A2240;
+  --breadcrumbs-link-fg: #004B98;
+  --selected-row: #E6F4FB;
+  --message-success-bg: #E6F4FB;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --link-fg: #004B98;
+    --link-hover-color: #0A2240;
+    --link-selected-fg: #004B98;
+    --breadcrumbs-bg: #E6F4FB;
+    --breadcrumbs-fg: #0A2240;
+    --breadcrumbs-link-fg: #004B98;
+    --selected-row: #E6F4FB;
+    --message-success-bg: #E6F4FB;
+  }
+}
+
+/* Light blue line under the top bar, like the site nav */
+#header {
+  border-bottom: 3px solid #3DB5E6;
+}
+
+/* Site nav bar at the top of the admin login page */
+.login .site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+/* Give the login box room below the nav bar */
+body.login #container {
+  margin-top: 130px;
+}
+
+/* The admin colors all links blue; keep the nav bar's own colors */
+.site-header a:link,
+.site-header a:visited {
+  color: #E2E8F0;
+}
+
+.site-header a.site-brand:link,
+.site-header a.site-brand:visited,
+.site-header a.site-nav__link.is-active {
+  color: #fff;
+}
+
+.site-header a:hover {
+  color: #3DB5E6;
+}
+
+@media (max-width: 640px) {
+  body.login #container {
+    margin-top: 160px;
+  }
+}

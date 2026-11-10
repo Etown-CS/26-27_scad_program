@@ -88,7 +88,14 @@
     </label><br><br>
 
     <button type="submit">Submit</button>
-  </form>
+   </form>
+
+  <!-- Submissions sent from this browser (saved only on this device) -->
+  <section id="previous-submissions" class="previous" hidden>
+    <h3>Your previous submissions</h3>
+    <ul id="previous-list"></ul>
+    <button type="button" id="clear-previous" class="secondary-button">Clear this list</button>
+  </section>
   </main>
 
   <script src="{% static 'registration/script.js' %}"></script>
