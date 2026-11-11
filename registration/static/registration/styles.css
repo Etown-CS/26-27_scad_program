@@ -335,3 +335,11 @@ button:focus-visible {
   border-left: 4px solid var(--red);
   color: #8A1510;
 }
+
+
+/* Small hint under each mentor search box */
+.mentor-hint {
+  margin: 6px 0 0;
+  font-size: 0.85rem;
+  color: #5F6B7A;
+}

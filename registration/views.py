@@ -3,9 +3,9 @@ import json
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_GET, require_POST
 
-from .models import Event, RawSubmission
+from .models import Event, Person, RawSubmission
 from .processing import mark_needs_review, process_raw_submission
 
 REQUIRED_FIELDS = [
@@ -70,3 +70,16 @@ def create_submission(request):
         mark_needs_review(raw, error)
 
     return JsonResponse({"message": "Received", "id": raw.raw_submission_id}, status=201)
+
+@require_GET
+def mentor_list(request):
+    """Returns everyone who has mentored a submission, for the form's mentor search."""
+    mentors = (
+        Person.objects.filter(mentorships__isnull=False)
+        .exclude(email__iendswith="@example.com")  # leave out test data
+        .exclude(first_name="", last_name="")       # leave out entries with no name
+        .distinct()
+        .order_by("last_name", "first_name")
+        .values("first_name", "last_name", "email")
+    )
+    return JsonResponse({"mentors": list(mentors)})

@@ -155,3 +155,42 @@ document.getElementById('clear-previous').addEventListener('click', function () 
 });
 
 renderPreviousSubmissions(); // show the list when the page loads
+
+
+// Mentor search: picking a known mentor fills in their name and email.
+// The list comes from /api/mentors/ (everyone who has mentored a submission).
+const mentorOptions = document.getElementById('mentor-options');
+const mentorsByLabel = {};
+
+function mentorLabel(mentor) {
+  return mentor.first_name + ' ' + mentor.last_name + ' (' + mentor.email + ')';
+}
+
+fetch('/api/mentors/')
+  .then(function (response) {
+    return response.ok ? response.json() : { mentors: [] };
+  })
+  .then(function (data) {
+    data.mentors.forEach(function (mentor) {
+      const label = mentorLabel(mentor);
+      mentorsByLabel[label] = mentor;
+      const option = document.createElement('option');
+      option.value = label;
+      mentorOptions.appendChild(option);
+    });
+  })
+  .catch(function () {
+    // The list couldn't load: mentors can still be typed in by hand
+  });
+
+document.querySelectorAll('.mentor-search').forEach(function (search) {
+  search.addEventListener('input', function () {
+    const mentor = mentorsByLabel[search.value];
+    if (!mentor) return; // still typing, or not in the list
+
+    const prefix = search.dataset.prefix; // "mentor1" or "mentor2"
+    form.querySelector('[name="' + prefix + '_first_name"]').value = mentor.first_name;
+    form.querySelector('[name="' + prefix + '_last_name"]').value = mentor.last_name;
+    form.querySelector('[name="' + prefix + '_email"]').value = mentor.email;
+  });
+});

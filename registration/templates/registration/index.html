@@ -54,8 +54,15 @@
     <div id="group-members"></div>
     <button type="button" id="add-member" class="secondary-button">+ Add a group member</button>
 
-    <h2>Mentors</h2>
+        <h2>Mentors</h2>
+    <!-- Names for the mentor search boxes (filled in by script.js) -->
+    <datalist id="mentor-options"></datalist>
+
     <p class="subheading">Primary mentor</p>
+    <label>Search for your mentor
+      <input type="text" class="mentor-search" data-prefix="mentor1" list="mentor-options" placeholder="Start typing a name" autocomplete="off">
+    </label><br>
+    <p class="mentor-hint">Pick a name to fill in their information, or type it below if they aren't listed.</p>
     <label>First name <input type="text" name="mentor1_first_name" required></label><br>
     <label>Last name <input type="text" name="mentor1_last_name" required></label><br>
     <label>Email <input type="email" name="mentor1_email" required></label><br>
@@ -64,13 +71,17 @@
     <label><input type="radio" name="mentor1_willing_to_moderate" value="no"> No</label><br>
 
     <p class="subheading">Secondary mentor (optional)</p>
+    <label>Search for your mentor
+      <input type="text" class="mentor-search" data-prefix="mentor2" list="mentor-options" placeholder="Start typing a name" autocomplete="off">
+    </label><br>
+    <p class="mentor-hint">Pick a name to fill in their information, or type it below if they aren't listed.</p>
     <label>First name <input type="text" name="mentor2_first_name"></label><br>
     <label>Last name <input type="text" name="mentor2_last_name"></label><br>
     <label>Email <input type="email" name="mentor2_email"></label><br>
     <p>Would your secondary mentor be willing to moderate a session?</p>
     <label><input type="radio" name="mentor2_willing_to_moderate" value="yes"> Yes</label>
     <label><input type="radio" name="mentor2_willing_to_moderate" value="no"> No</label><br>
-
+    
     <h2>Panel (oral presentations only)</h2>
     <p>Is this presentation part of a panel?</p>
     <label><input type="radio" name="is_panel" value="yes"> Yes</label>
