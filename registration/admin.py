@@ -201,7 +201,7 @@ class ScheduleAdmin(admin.ModelAdmin):
 
 @admin.register(ScheduleAssignment)
 class ScheduleAssignmentAdmin(admin.ModelAdmin):
-    list_display = ("start_time", "room", "submission", "panel", "session", "is_locked")
+    list_display = ("start_time", "room", "submission","presenters", "panel", "session", "is_locked")
     list_display_links = ("submission",)
     list_editable = ("is_locked",)
     list_filter = ("schedule", "session__session_name", "session__location", "is_locked")
@@ -210,9 +210,9 @@ class ScheduleAssignmentAdmin(admin.ModelAdmin):
     list_per_page = 100
 
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related(
-            "submission__panel", "session__location"
-        )
+        return (super().get_queryset(request)
+                .select_related("submission__panel", "session__location")
+                .prefetch_related("submission__presenters__person"))
 
     @admin.display(description="Room", ordering="session__location")
     def room(self, obj):
@@ -221,3 +221,7 @@ class ScheduleAssignmentAdmin(admin.ModelAdmin):
     @admin.display(description="Panel")
     def panel(self, obj):
         return obj.submission.panel or "—"
+    
+    @admin.display(description="Presenters")
+    def presenters(self, obj):
+        return people_list(obj.submission.presenters.all())

@@ -18,6 +18,9 @@ class Event(models.Model):
         managed = False
         db_table = 'event'
 
+    def __str__(self):
+        return self.event_name
+
 
 class RawSubmission(models.Model):
     raw_submission_id = models.AutoField(primary_key=True)

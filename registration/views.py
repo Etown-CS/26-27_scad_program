@@ -21,14 +21,19 @@ def home(request):
 def agenda_page(request):
     """Shows the public agenda. The schedule only appears after an admin publishes it."""
     # The next upcoming SCAD, or the most recent one if none are coming up
-    event = (
-        Event.objects.filter(event_date__gte=timezone.localdate()).order_by("event_date").first()
-        or Event.objects.order_by("-event_date").first()
+    schedule = (
+        Schedule.objects.filter(status="published")
+        .select_related("event")
+        .order_by("-event__event_date")
+        .first()
     )
-
-    schedule = None
-    if event:
-        schedule = Schedule.objects.filter(event=event, status="published").first()
+    if schedule:
+        event = schedule.event
+    else:
+        event = (
+            Event.objects.filter(event_date__gte=timezone.localdate()).order_by("event_date").first()
+            or Event.objects.order_by("-event_date").first()
+        )
 
     # Group the presentations by session, then by room:
     # {"Session 1": {"Nicarry 202": [presentation, ...]}, ...}
