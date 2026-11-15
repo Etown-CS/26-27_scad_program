@@ -1,0 +1,117 @@
+{% load static tz %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCAD Public Agenda</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'registration/navbar.css' %}">
+  <link rel="stylesheet" href="{% static 'registration/styles.css' %}">
+</head>
+<body>
+  {% include "registration/partials/navbar.html" with active="agenda" %}
+
+  <main class="page">
+
+    <!-- Event name and date come from the event table -->
+    <header class="banner">
+      <p class="eyebrow">Elizabethtown College</p>
+      <h1>SCAD Public Agenda</h1>
+      <p class="subtitle">
+        {% if event %}
+          {{ event.event_name }} · {{ event.event_date|date:"l, F j, Y" }}
+        {% else %}
+          Scholarship and Creative Arts Day
+        {% endif %}
+      </p>
+    </header>
+
+    {% if schedule %}
+
+      <!-- Published schedule: one card per session, rooms inside -->
+      <div class="agenda-actions">
+        <button type="button" onclick="window.print()">Save as PDF</button>
+      </div>
+
+      {% for session_name, rooms in sessions.items %}
+        <section class="card agenda-session">
+          <h2>{{ session_name }}</h2>
+
+          {% for room, presentations in rooms.items %}
+            <div class="agenda-room">
+              <h3>{{ room }}</h3>
+              <ul class="agenda-list">
+                {% for presentation in presentations %}
+                  <li class="agenda-item">
+                    <span class="agenda-time">{{ presentation.start_time|timezone:"America/New_York"|date:"g:i A" }}</span>
+                    <div>
+                      <p class="agenda-title">{{ presentation.submission.title }}</p>
+                      <p class="muted">
+                        {% for presenter in presentation.submission.presenters.all %}{{ presenter.person }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% if presentation.submission.department %} · {{ presentation.submission.department }}{% endif %}
+                      </p>
+                      {% if presentation.submission.panel %}
+                        <p class="muted">Panel: {{ presentation.submission.panel }}</p>
+                      {% endif %}
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endfor %}
+        </section>
+      {% endfor %}
+
+    {% else %}
+
+      <!-- Shown until an admin publishes the schedule -->
+      <section class="card agenda-notice">
+        <h2>The schedule hasn't been published yet</h2>
+        <p>
+          The full schedule of presentations and posters will appear here about a week before SCAD.
+        </p>
+        {% if registration_open %}
+          <p>
+            Applications are open until
+            <strong>{{ event.registration_deadline|timezone:"America/New_York"|date:"l, F j \a\t g:i A" }}</strong>.
+          </p>
+          <a href="{% url 'form' %}" class="button-link">Submit an application</a>
+        {% elif event %}
+          <p>Applications are closed. Please contact the SCAD coordinator with any questions.</p>
+        {% endif %}
+      </section>
+
+    {% endif %}
+
+    <!-- General outline of the day (same session times as scheduler.py) -->
+    <section class="card">
+      <h2>The day at a glance</h2>
+      <ol class="day-timeline">
+        <li>
+          <span class="day-time">9:30 – 10:50 AM</span>
+          <span class="day-event">Oral Presentations: Session 1</span>
+        </li>
+        <li>
+          <span class="day-time">11:00 AM – 12:20 PM</span>
+          <span class="day-event">Oral Presentations: Session 2</span>
+        </li>
+        <li>
+          <span class="day-time">1:15 – 3:15 PM</span>
+          <span class="day-event">Oral Presentations: Session 3</span>
+        </li>
+        <li>
+          <span class="day-time">3:30 – 4:20 PM</span>
+          <span class="day-event">Poster Session</span>
+        </li>
+      </ol>
+      <p class="muted">
+        Each oral presentation is 20 minutes: 15 minutes to present and 5 minutes for questions.
+      </p>
+    </section>
+
+  </main>
+</body>
+</html>

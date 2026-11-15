@@ -1,18 +1,22 @@
-/* Colors and fonts from the Elizabethtown College Brand Style Guide (Sept. 2025) */
+/* Styles for the public pages: the application form and the public agenda.
+   (The nav bar is in navbar.css, the admin colors are in admin.css,
+   and the homepage uses Tailwind.)
+   Colors and fonts from the Elizabethtown College Brand Style Guide (Sept. 2025). */
 :root {
   /* Brand colors */
   --etown-blue: #004B98;   /* PMS 2945, primary: buttons, focus */
   --etown-navy: #0A2240;   /* PMS 289: banner, headings, labels */
-  --sky-blue: #3DB5E6;     /* PMS 298: accents, section numbers */
+  --sky-blue: #3DB5E6;     /* PMS 298: accents */
   --cool-gray: #C8C8C8;    /* PMS Cool Gray 3: borders */
   --red: #E1261C;          /* PMS 485: errors */
 
   /* Light tints for backgrounds */
   --page-bg: #F2F4F7;      /* very light gray page */
-  --card-bg: #FFFFFF;      /* white form card */
+  --card-bg: #FFFFFF;      /* white cards */
   --input-bg: #F7F8FA;     /* input fill */
-  --note-bg: #E6F4FB;      /* light sky blue info note */
+  --note-bg: #E6F4FB;      /* light sky blue notes */
   --text: #1A1A1A;
+  --muted-text: #5F6B7A;   /* smaller gray text */
 
   /* Brand fonts: Clarendon for headlines, Verdana as the default.
      Clarendon isn't on every computer, so it falls back to Georgia. */
@@ -22,6 +26,8 @@
   --radius-card: 12px;
   --radius-control: 6px;
 }
+
+/* SHARED BY EVERY PUBLIC PAGE */
 
 body {
   font-family: var(--font-body);
@@ -38,7 +44,7 @@ body {
   padding: 32px 20px;
 }
 
-/* Navy banner at the top */
+/* Navy banner at the top of each page */
 .banner {
   background-color: var(--etown-navy);
   color: #fff;
@@ -70,6 +76,68 @@ body {
   color: #D5DCE6;
 }
 
+/* Light blue info note */
+.note {
+  background-color: var(--note-bg);
+  border-left: 4px solid var(--sky-blue);
+  border-radius: var(--radius-control);
+  padding: 12px 16px;
+  margin: 0 0 8px;
+  color: var(--etown-navy);
+}
+
+/* White content card */
+.card {
+  margin-bottom: 20px;
+  padding: 24px 28px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--cool-gray);
+  border-radius: var(--radius-card);
+}
+
+/* Smaller gray text */
+.muted {
+  font-size: 0.9rem;
+  color: var(--muted-text);
+}
+
+/* Blue button-style link */
+.button-link {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: var(--radius-control);
+  background-color: var(--etown-blue);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link:hover {
+  background-color: var(--etown-navy);
+}
+
+/* Success and error messages */
+.message {
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: var(--radius-control);
+}
+
+.message.success {
+  background-color: var(--note-bg);
+  border-left: 4px solid var(--etown-blue);
+  color: var(--etown-navy);
+}
+
+.message.error {
+  background-color: #FDECEA;
+  border-left: 4px solid var(--red);
+  color: #8A1510;
+}
+
+
+/* APPLICATION FORM (index.html) */
+
 /* Form card */
 form {
   background-color: var(--card-bg);
@@ -84,18 +152,8 @@ form br {
   display: none;
 }
 
-/* Light blue info note at the top of the form */
-.note {
-  background-color: var(--note-bg);
-  border-left: 4px solid var(--sky-blue);
-  border-radius: var(--radius-control);
-  padding: 12px 16px;
-  margin: 0 0 8px;
-  color: var(--etown-navy);
-}
-
 /* Section headings: navy text with a numbered circle in front */
-h2 {
+form h2 {
   font-family: var(--font-headline);
   font-weight: 700;
   font-size: 1.35rem;
@@ -109,7 +167,7 @@ h2 {
   counter-increment: section;
 }
 
-h2::before {
+form h2::before {
   content: counter(section);
   display: inline-flex;
   align-items: center;
@@ -124,7 +182,7 @@ h2::before {
   font-weight: 700;
 }
 
-p {
+form p {
   margin: 16px 0 6px;
 }
 
@@ -136,7 +194,7 @@ p {
 }
 
 /* Fields */
-label {
+form label {
   display: block;
   margin-top: 16px;
   font-weight: 700;
@@ -184,7 +242,7 @@ textarea:focus {
 }
 
 /* Radio options look like small pills; the chosen one turns Etown blue */
-label:has(input[type="radio"]) {
+form label:has(input[type="radio"]) {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -197,7 +255,7 @@ label:has(input[type="radio"]) {
   cursor: pointer;
 }
 
-label:has(input[type="radio"]:checked) {
+form label:has(input[type="radio"]:checked) {
   background-color: var(--etown-blue);
   border-color: var(--etown-blue);
   color: #fff;
@@ -314,32 +372,187 @@ button:focus-visible {
 .previous-meta {
   margin-top: 2px;
   font-size: 0.85rem;
-  color: #5F6B7A;
+  color: var(--muted-text);
 }
-
-/* Success and error messages after submitting */
-.message {
-  margin-top: 16px;
-  padding: 12px 16px;
-  border-radius: var(--radius-control);
-}
-
-.message.success {
-  background-color: var(--note-bg);
-  border-left: 4px solid var(--etown-blue);
-  color: var(--etown-navy);
-}
-
-.message.error {
-  background-color: #FDECEA;
-  border-left: 4px solid var(--red);
-  color: #8A1510;
-}
-
 
 /* Small hint under each mentor search box */
 .mentor-hint {
   margin: 6px 0 0;
   font-size: 0.85rem;
-  color: #5F6B7A;
+  color: var(--muted-text);
+}
+
+
+/* PUBLIC AGENDA (agenda.html) */
+
+.card h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-headline);
+  font-size: 1.35rem;
+  color: var(--etown-navy);
+}
+
+.card p {
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+/* "Not published yet" notice */
+.agenda-notice {
+  border-left: 6px solid var(--sky-blue);
+  background-color: var(--note-bg);
+}
+
+/* The day at a glance */
+.day-timeline {
+  list-style: none;
+  margin: 16px 0;
+  padding: 0;
+}
+
+.day-timeline li {
+  display: flex;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid #E5E7EB;
+}
+
+.day-timeline li:first-child {
+  border-top: none;
+}
+
+.day-time {
+  flex: 0 0 190px;
+  font-weight: 700;
+  color: var(--etown-blue);
+}
+
+.day-event {
+  font-weight: 700;
+  color: var(--etown-navy);
+}
+
+/* Stack the time above the event on phones */
+@media (max-width: 600px) {
+  .day-timeline li {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .day-time {
+    flex-basis: auto;
+  }
+}
+
+
+/* Save as PDF button above the schedule */
+.agenda-actions {
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.agenda-actions button {
+  margin-top: 0;
+  padding: 10px 20px;
+}
+
+/* Published schedule */
+.agenda-session h2 {
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--etown-blue);
+}
+
+.agenda-room h3 {
+  margin: 20px 0 4px;
+  font-size: 1rem;
+  color: var(--etown-blue);
+}
+
+.agenda-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.agenda-item {
+  display: flex;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid #E5E7EB;
+}
+
+.agenda-item p {
+  margin: 0 0 2px;
+}
+
+.agenda-time {
+  flex: 0 0 80px;
+  font-weight: 700;
+  color: var(--etown-navy);
+}
+
+.agenda-title {
+  font-weight: 700;
+  color: var(--etown-navy);
+}
+
+@media (max-width: 600px) {
+  .agenda-item {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .agenda-time {
+    flex-basis: auto;
+  }
+}
+
+/* Printed / saved PDF version: just the schedule, no nav bar or buttons */
+@media print {
+  .site-header,
+  .agenda-actions {
+    display: none;
+  }
+
+  body {
+    background-color: #fff;
+    font-size: 11pt;
+  }
+
+  .page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .banner,
+  .card {
+    border: none;
+    padding: 0;
+    margin-bottom: 16px;
+  }
+
+  .banner {
+    background-color: #fff;
+    border-radius: 0;
+    border-bottom: 2px solid var(--etown-navy);
+    padding-bottom: 8px;
+  }
+
+  .banner h1 {
+    color: var(--etown-navy);
+  }
+
+  .eyebrow {
+    color: var(--etown-blue);
+  }
+
+  .subtitle {
+    color: var(--text);
+  }
+
+  /* Keep each room's list together on one page when it fits */
+  .agenda-room,
+  .agenda-item {
+    break-inside: avoid;
+  }
 }

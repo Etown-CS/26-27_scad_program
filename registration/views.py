@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.http import require_GET, require_POST
 
-from .models import Event, Person, RawSubmission
+from .models import Event, Person, RawSubmission, Schedule
 from .processing import mark_needs_review, process_raw_submission
 
 REQUIRED_FIELDS = [
@@ -14,16 +14,47 @@ REQUIRED_FIELDS = [
     "mentor1_first_name", "mentor1_last_name", "mentor1_email",
 ]
 
-
 def home(request):
     """Shows the SCAD homepage."""
     return render(request, "registration/home.html")
 
+def agenda_page(request):
+    """Shows the public agenda. The schedule only appears after an admin publishes it."""
+    # The next upcoming SCAD, or the most recent one if none are coming up
+    event = (
+        Event.objects.filter(event_date__gte=timezone.localdate()).order_by("event_date").first()
+        or Event.objects.order_by("-event_date").first()
+    )
+
+    schedule = None
+    if event:
+        schedule = Schedule.objects.filter(event=event, status="published").first()
+
+    # Group the presentations by session, then by room:
+    # {"Session 1": {"Nicarry 202": [presentation, ...]}, ...}
+    sessions = {}
+    if schedule:
+        presentations = (
+            schedule.assignments
+            .select_related("submission__panel", "session__location")
+            .prefetch_related("submission__presenters__person")
+            .order_by("session__start_time", "session__location__building",
+                      "session__location__room_name", "start_time")
+        )
+        for presentation in presentations:
+            rooms = sessions.setdefault(presentation.session.session_name, {})
+            rooms.setdefault(str(presentation.session.location), []).append(presentation)
+
+    return render(request, "registration/agenda.html", {
+        "event": event,
+        "registration_open": event is not None and event.registration_deadline > timezone.now(),
+        "schedule": schedule,
+        "sessions": sessions,
+    })
 
 def form_page(request):
     """Shows the public application form."""
     return render(request, "registration/index.html")
-
 
 @require_POST
 def create_submission(request):
