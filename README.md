@@ -5,13 +5,17 @@ Elizabethtown College | Computer Science Department | Capstone Projects
 
 ## Project Description
 
-An auto scheduler for SCAD Day presentations at Etown College. Users will be directed to a SCAD homepage. On this homepage there will be a link to the public application form. On this form, users will be able to submit student' information, presentation information, group information, mentor information, panel information, etc. After the form is submitted, the information goes to the Supabase database. From here, an auto scheduler will make a SCAD schedule for the admin. This will include preferences and hard constraints to the best of its ability. Admins will be able to see any errors or conflictions within the scheduler. They will also be able to make edits to the schedule afterwards. Schedules will be made in a pdf form, and be shown on the website. 
+An auto scheduler for SCAD Day presentations at Etown College. Users start on a SCAD homepage, which links to the public application form and the public agenda. On the form, users submit students' information, presentation information, group information, mentor information, panel information, etc. Submitted forms are saved to the Supabase database and split into the project's tables.
+
+In the admin site, the SCAD coordinator reviews and approves submissions, then generates a draft schedule with the auto scheduler (OR-Tools). The scheduler follows hard constraints and preferences as well as it can, and reports any conflicts it could not resolve. The coordinator can edit the draft and then publish it. Once published, the schedule appears on the public agenda page, where visitors can also save it as a PDF.
+
+For SCAD coordinators, see the [Admin Guide](ADMIN_GUIDE.md).
 
 ## External Requirements
 
 In order to build this project you first have to install:
 
--   [Python 3.10 or newer](https://www.python.org/downloads/) (tested with Python 3.11)
+-   [Python 3.13](https://www.python.org/downloads/) (OR-Tools does not support newer versions yet)
 -   [Git](https://git-scm.com/downloads)
 -   [Visual Studio Code](https://code.visualstudio.com/) (recommended)
 
@@ -29,7 +33,7 @@ If you installed Python through Anaconda and `python` is not found, use the full
 & "$env:USERPROFILE\anaconda3\python.exe" --version
 ```
 
-The project's Python packages (Django, psycopg, python-dotenv) are installed in the Setup step below.
+The project's Python packages (Django, psycopg, python-dotenv, OR-Tools) are installed in the Setup step below.
 
 You will also need access to the team's Supabase project. Ask a team member for the database connection details.
 
@@ -78,7 +82,15 @@ DB_PORT=5432
 
 Get these values from a team member or from the Supabase dashboard (**Connect → Direct → Session pooler**). The `.env` file is ignored by Git and should **never** be committed.
 
-6. Make sure the `event` table in Supabase has at least one event with a registration deadline in the future. Submissions are linked to the current event and will be rejected if no event exists or the deadline has passed.
+6. Make sure the `event` table in Supabase has the upcoming SCAD as the event with the **latest event date**, and that its registration deadline is in the future. The form links every submission to the event with the latest date, and rejects submissions after that event's deadline.
+
+7. Create an admin login for yourself (skip this if you already have one):
+
+```bash
+python manage.py createsuperuser
+```
+
+Follow the prompts for a username, email, and password. Use the same command to create a login for the SCAD coordinator.
 
 ## Running
 
@@ -94,18 +106,44 @@ venv\Scripts\activate
 python manage.py runserver
 ```
 
-3. Open http://127.0.0.1:8000 in your browser to view the public application form.
+3. Open the pages in your browser:
+
+| Page | Address |
+|---|---|
+| Homepage | http://127.0.0.1:8000/ |
+| Application form | http://127.0.0.1:8000/register/ |
+| Public agenda | http://127.0.0.1:8000/agenda/ |
+| Admin site | http://127.0.0.1:8000/admin/ |
 
 To exit, press `Ctrl + C` in the terminal.
 
 A red warning about "unapplied migrations" is expected. Our tables are managed in Supabase, so do not run `python manage.py migrate` without checking with the team first.
 
+### Importing the 2021 test data
+
+The 2021 SCAD data in `scad_2021_scheduler_ready.csv` is used for testing. These scripts load it into Supabase. They have already been run, so only run them again after checking with the team:
+
+- `import_scad.py` and `import_panels.py`: run with `python import_scad.py` or `python import_panels.py`
+- `import_mentors.py`: run with `python manage.py shell -c "exec(open('import_mentors.py').read())"` (set `DRY_RUN = False` to actually save)
+
 ### Testing
 
-1. Fill out the form with test data and click **Submit**.
+**Application form**
+
+1. Go to `/register/`, fill out the form with test data, and click **Submit**.
 2. A "Thank you! Your registration was received." message should appear on the page.
-3. The terminal should print `Saved raw submission #... for ...`.
-4. In Supabase, open **Table Editor → raw_submission** to confirm the new row was saved.
+3. The terminal should print `Saved raw submission #...` and `Processed into submission #...`.
+4. In Supabase, open **Table Editor** and check `raw_submission`, `submission`, `person`, `submission_presenter`, and `submission_mentor` for the new rows.
+
+**Scheduling and the public agenda**
+
+1. In the admin site, mark some oral submissions as **Approved** in **Submissions**.
+2. In **Events**, select the event, choose **Generate draft schedule for the selected event** from the Action menu, and click **Go**.
+3. Check the draft in **Schedule assignments**. The public agenda at `/agenda/` should still say the schedule hasn't been published.
+4. In **Schedules**, choose **Publish selected schedule**. The agenda should now list the presentations by session and room.
+5. Choose **Set selected schedule back to draft** when you're done testing.
+
+Testing writes to the shared Supabase database, so delete test rows afterward and check with the team before changing real data.
 
 ## Deployment
 
@@ -118,8 +156,5 @@ Megan Benson bensonm@etown.edu
 Anand Bum-Erdene bumerdenea@etown.edu
 Isabella Edwards edwardsi@etown.edu
 
-## Design ideal 
+## Design ideal
 https://stitch.withgoogle.com/preview/7569896754880462826?node-id=d5b731638d134a9c9fa7dd3123af463b
-
-Use Python 3.13 (OR-Tools doesn’t support 3.15 yet).
-
